@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="small text-muted">
+    <span class="tag-sim">simulado</span>
+    Atualiza a cada 2 s. Um comando só muda na tela depois que o ESP32 <b>confirma</b>.
+  </div>
+  <div class="d-flex align-items-center gap-3">
+    <div id="mqtt-status" class="small"></div>
+    <a class="btn btn-sm btn-primary" href="{{ url_for('main.cadastro_salas') }}">
+      <i class="bi bi-plus-circle me-1"></i>Cadastrar sala
+    </a>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-3">
+    <div class="se-card kpi">
+      <div class="ico ico-green"><i class="bi bi-building"></i></div>
+      <div>
+        <div class="lbl">Salas online</div>
+        <div class="val" id="kpi-online">—</div>
+        <div class="sub" id="kpi-total">—</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="se-card kpi">
+      <div class="ico ico-red"><i class="bi bi-exclamation-triangle"></i></div>
+      <div>
+        <div class="lbl">Ocorrências abertas</div>
+        <div class="val" id="kpi-pend">—</div>
+        <div class="sub"><a href="{{ url_for('main.anomalias') }}">ver ocorrências</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="aviso" class="alert alert-danger d-none"></div>
+
+<div id="salas" class="row g-3"></div>
+
+<div id="vazio" class="se-card text-center text-muted d-none">
+  Nenhuma sala cadastrada.<br>
+  <a href="{{ url_for('main.cadastro_salas') }}">Cadastre uma sala</a> e depois ligue o ESP32 ou rode
+  <code>python tools/simulador_esp32.py</code>.
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tempo_real.js') }}"></script>
+{% endblock %}

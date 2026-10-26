@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · SMART ENERGY FACENS</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo-facens.jpg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+  <div class="login-wrap">
+    <form class="login-card" method="post" autocomplete="off">
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <img src="{{ url_for('static', filename='img/logo-facens.jpg') }}" height="48" alt="Facens">
+        <div>
+          <div class="fw-bold fs-5">SMART ENERGY</div>
+          <div class="small text-muted">FACENS</div>
+        </div>
+      </div>
+
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      {% for categoria, mensagem in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ categoria }} py-2">{{ mensagem }}</div>
+      {% endfor %}
+
+      <label class="form-label">Usuário</label>
+      <input name="usuario" class="form-control mb-3" required autofocus>
+
+      <label class="form-label">Senha</label>
+      <input name="senha" type="password" class="form-control mb-4" required>
+
+      <button class="btn btn-primary w-100">Entrar</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+{% if ger and ger.solar_kwh %}
+<div class="row g-3 mb-3">
+  <div class="col-4">
+    <div class="se-card kpi">
+      <div class="ico ico-blue"><i class="bi bi-lightning-charge-fill"></i></div>
+      <div>
+        <div class="lbl">Consumo total {{ ger.ano }}</div>
+        <div class="val">{{ cons.total|br }} kWh</div>
+        <div class="sub">base do cálculo</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="se-card kpi">
+      <div class="ico ico-yellow"><i class="bi bi-brightness-high-fill"></i></div>
+      <div>
+        <div class="lbl">Geração solar {{ ger.ano }}</div>
+        <div class="val">{{ ger.solar_kwh|br }} kWh</div>
+        <div class="sub">total do ano</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="se-card kpi">
+      <div class="ico ico-green"><i class="bi bi-tree-fill"></i></div>
+      <div>
+        <div class="lbl">Solar ÷ consumo</div>
+        <div class="val">{{ ger.solar_pct|br(2) }}%</div>
+        <div class="sub">do consumo vem da energia solar</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="se-card">
+  <h2>Fontes renováveis ({{ ger.ano }}) <span class="tag-real">real</span></h2>
+  <table class="table table-sm table-se mb-0">
+    <thead>
+      <tr><th>Fonte</th><th class="text-end">kWh</th><th>Tipo</th></tr>
+    </thead>
+    <tbody>
+      {% for f in ger.fontes.values() %}
+      <tr>
+        <td class="text-capitalize">{{ f.fonte }}</td>
+        <td class="text-end">{{ f.kwh|br }}</td>
+        <td class="small text-muted">{{ f.tipo }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="small mt-3 mb-0">
+    <b>Todas as fontes ÷ consumo:</b> {{ ger.renovavel_pct_total|br(2) }}%.
+    É maior que os {{ ger.solar_pct|br(2) }}% da solar porque soma também biogás, biodiesel e eólica
+    (as duas últimas são capacidade, não produção).
+  </p>
+</div>
+{% else %}
+<div class="alert alert-warning">Nenhum dado de geração para este ano.</div>
+{% endif %}
+{% endblock %}

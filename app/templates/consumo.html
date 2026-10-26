@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+{% if cons %}
+<div class="row g-3 mb-3">
+  <div class="col-3"><div class="se-card kpi"><div class="ico ico-blue"><i class="bi bi-lightning-charge-fill"></i></div><div><div class="lbl">Consumo total {{ cons.ano }}</div><div class="val">{{ cons.total|br }} kWh</div><div class="sub">total do ano</div></div></div></div>
+  <div class="col-3"><div class="se-card kpi"><div class="ico ico-red"><i class="bi bi-arrow-up-circle"></i></div><div><div class="lbl">Maior consumo</div><div class="val">{{ cons.maior.nome_longo }}</div><div class="sub">{{ cons.maior.kwh|br }} kWh</div></div></div></div>
+  <div class="col-3"><div class="se-card kpi"><div class="ico ico-green"><i class="bi bi-arrow-down-circle"></i></div><div><div class="lbl">Menor consumo</div><div class="val">{{ cons.menor.nome_longo }}</div><div class="sub">{{ cons.menor.kwh|br }} kWh</div></div></div></div>
+  <div class="col-3"><div class="se-card kpi"><div class="ico ico-gray"><i class="bi bi-calendar3"></i></div><div><div class="lbl">Média mensal</div><div class="val">{{ cons.media_mensal|br }} kWh</div><div class="sub">total ÷ 12 meses</div></div></div></div>
+</div>
+
+<div class="se-card mb-3"><h2>Consumo mensal ({{ cons.ano }}) <span class="tag-real">real</span></h2><div class="chart-box"><canvas id="chart-consumo"></canvas></div></div>
+
+<div class="se-card mb-3"><h2>Desvio de cada mês em relação à média</h2>
+  <div class="chart-box"><canvas id="chart-desvio"></canvas></div></div>
+
+<div class="se-card"><div class="d-flex justify-content-between mb-2"><h2 class="mb-0">Tabela mensal</h2>
+  <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.exportar', tipo='consumo') }}"><i class="bi bi-download me-1"></i>Exportar CSV</a></div>
+<table class="table table-sm table-se align-middle mb-0"><thead><tr><th>Mês</th><th class="text-end">Consumo (kWh)</th><th class="text-end">Variação</th></tr></thead><tbody>
+{% for m in cons.meses %}<tr><td>{{ m.nome_longo }}</td><td class="text-end">{{ m.kwh|br }}</td>
+ <td class="text-end {{ 'pos' if m.desvio_pct > 0 else 'neg' }}">{{ '%+.1f'|format(m.desvio_pct)|replace('.', ',') }}%</td></tr>{% endfor %}
+<tr class="fw-bold"><td>Total</td><td class="text-end">{{ cons.total|br }}</td><td></td></tr></tbody></table>
+{% if cons.diferenca_total_vs_soma|abs > 0 %}<p class="small text-muted mt-2 mb-0">A soma dos meses dá {{ cons.soma_meses|br }} kWh, o que difere {{ cons.diferenca_total_vs_soma|abs|int }} kWh do total. É só arredondamento, vale o total.</p>{% endif %}
+</div>
+<script id="dados-cons" type="application/json">{{ {'meses': cons.meses, 'media': cons.media_mensal}|tojson }}</script>
+{% else %}<div class="alert alert-warning">Nenhum dado de consumo cadastrado.</div>{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/graficos_consumo.js') }}"></script>{% endblock %}

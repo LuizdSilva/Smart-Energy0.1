@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{# Página inicial: só o Power BI. Os indicadores ficam nas outras páginas. #}
+{% block content %}
+{% if powerbi_url %}
+  <iframe class="pbi-frame" title="Dashboard Power BI" src="{{ powerbi_url }}" allowfullscreen></iframe>
+{% else %}
+  <div class="pbi-placeholder"><div><i class="bi bi-bar-chart-line fs-1"></i>
+    <p class="mb-1 fw-semibold">Área reservada ao relatório do Power BI</p>
+    <p class="small mb-0">Defina <code>POWERBI_EMBED_URL</code> no arquivo <code>.env</code> com o link de incorporação<br>e reinicie o servidor.</p></div></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="se-card kpi mb-3" style="max-width: 340px">
+  <div class="ico ico-red"><i class="bi bi-exclamation-triangle"></i></div>
+  <div>
+    <div class="lbl">Ocorrências abertas</div>
+    <div class="val {{ 'pos' if abertas }}">{{ abertas }}</div>
+    <div class="sub">ainda sem resolver</div>
+  </div>
+</div>
+
+<div class="se-card">
+  <div class="d-flex justify-content-between mb-3">
+    <h2 class="mb-0">Ocorrências de desperdício <span class="tag-sim">simulado</span></h2>
+
+    <div class="d-flex gap-2">
+      <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.exportar', tipo='ocorrencias') }}">
+        <i class="bi bi-download me-1"></i>Exportar CSV
+      </a>
+      <div class="btn-group btn-group-sm">
+        {% for valor, texto in (('todas', 'Todas'), ('aberta', 'Abertas'), ('resolvida', 'Resolvidas')) %}
+        <a class="btn btn-outline-primary {{ 'active' if status == valor }}"
+           href="{{ url_for('main.anomalias', status=valor) }}">{{ texto }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% include "_ocorrencias_tabela.html" %}
+
+  <p class="small text-muted mt-3 mb-0">
+    A ocorrência abre quando o ESP32 envia <code>alerta</code> (uma só vez por evento) e fecha quando os
+    equipamentos são desligados: pelo ESP32, por comando do sistema ou no local. Horários de Brasília.
+  </p>
+</div>
+
+{% endblock %}
